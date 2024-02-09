@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-
 import NextAuth, { type AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-const prisma = new PrismaClient();
+import clientPromise from "@/lib/mongodb";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 export const authOptions: AuthOptions = {
   //@ts-expect-error
-  adapter: PrismaAdapter(prisma),
+  adapter: MongoDBAdapter(clientPromise),
   debug: process.env.NODE_ENV === "development",
   providers: [
     GithubProvider({
