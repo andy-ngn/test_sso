@@ -8,6 +8,9 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
   ],
+  session: {
+    strategy: "database",
+  },
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
