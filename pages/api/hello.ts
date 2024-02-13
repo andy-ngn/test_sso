@@ -1,13 +1,14 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import esClient from "@/configs/elasticsearch";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Data = {
-  name: string;
-};
-
-export default function handler(
+type IndexName = "_accounts" | "_sessions" | "_users";
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
-  res.status(200).json({ name: "John Doe" });
+  const entry: IndexName = "_sessions";
+  const { body } = await esClient.search({
+    index: "test_sso" + entry,
+  });
+  res.status(200).json(body);
 }

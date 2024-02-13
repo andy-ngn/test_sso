@@ -58,52 +58,87 @@ export function ElasticSearchAdapter(
       > & { id: string };
     },
     async getUserByEmail(email) {
-      const {
-        body: { hits },
-      } = await esClient.search<MyUser>({
-        index: `${index_prefix}_users`,
-        size: 1,
-        body: {
-          _source: {
-            excludes: ["createdAt", "updatedAt", "password"],
-          },
-          query: {
-            term: {
-              email,
+      return await esClient
+        .search<MyUser>({
+          index: `${index_prefix}_users`,
+          size: 1,
+          body: {
+            _source: {
+              excludes: ["createdAt", "updatedAt", "password"],
+            },
+            query: {
+              term: {
+                email,
+              },
             },
           },
-        },
-      });
-      if (!hits.hits?.[0]?._source) return null;
-      const { _source, _id } = hits.hits[0];
-      return { ..._source, id: _id } as Omit<
-        MyUser,
-        "createdAt" | "updatedAt" | "password"
-      > & { id: string };
+        })
+        .then(({ body: { hits } }) => {
+          if (!hits.hits?.[0]?._source) return null;
+          const { _source, _id } = hits.hits[0];
+          return { ..._source, id: _id } as Omit<
+            MyUser,
+            "createdAt" | "updatedAt" | "password"
+          > & { id: string };
+        })
+        .catch((e) => {
+          console.error(e);
+          return null;
+        });
     },
     async getUserByAccount({ providerAccountId, provider }) {
-      const {
-        body: { _source: account },
-      } = await esClient.get<AdapterAccount>({
-        index: `${index_prefix}_accounts`,
-        id: providerAccountId,
-      });
-      if (!account) return null;
+      const userId = await esClient
+        .search<AdapterAccount>({
+          index: `${index_prefix}_accounts`,
+          size: 1,
+          body: {
+            query: {
+              bool: {
+                must: [
+                  {
+                    term: {
+                      providerAccountId,
+                    },
+                  },
+                  {
+                    term: {
+                      provider,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        })
+        .then((res) => {
+          if (!res.body.hits?.hits?.[0]?._source) return null;
+          return res.body.hits.hits[0]._id;
+        })
+        .catch((e) => {
+          console.error(e);
+          return null;
+        });
+      if (!userId) return null;
 
-      const {
-        body: { _source: user, _id },
-      } = await esClient.get<MyUser>({
-        index: `${index_prefix}_users`,
-        id: account.userId,
-        _source_excludes: ["createdAt", "updatedAt", "password"] as Array<
-          keyof MyUser
-        >,
-      });
-      if (!user) return null;
-      return { ...user, id: _id } as Omit<
-        MyUser,
-        "createdAt" | "updatedAt" | "password"
-      > & { id: string };
+      return await esClient
+        .get<MyUser>({
+          index: `${index_prefix}_users`,
+          id: userId,
+          _source_excludes: ["createdAt", "updatedAt", "password"] as Array<
+            keyof MyUser
+          >,
+        })
+        .then(({ body: { _source: user, _id } }) => {
+          if (!user) return null;
+          return { ...user, id: _id } as Omit<
+            MyUser,
+            "createdAt" | "updatedAt" | "password"
+          > & { id: string };
+        })
+        .catch((e) => {
+          console.error(e);
+          return null;
+        });
     },
     async updateUser(user) {
       await esClient.update<MyUser>({
@@ -196,12 +231,18 @@ export function ElasticSearchAdapter(
         >,
       });
       if (!user) return null;
+
       return {
-        session: { ...session, id: sessionToken },
+        session: {
+          ...session,
+          expires: new Date(session.expires),
+          id: sessionToken,
+        },
         user: { ...user, id: session.userId },
       };
     },
     async updateSession({ sessionToken, expires, userId }) {
+      console.log("updateSession", sessionToken, expires, userId);
       const { body } = await esClient.update<AdapterSession>({
         index: `${index_prefix}_sessions`,
         id: sessionToken,
@@ -217,6 +258,7 @@ export function ElasticSearchAdapter(
       return newSession;
     },
     async deleteSession(sessionToken) {
+      console.log("deleteSession", sessionToken);
       await esClient.delete({
         index: `${index_prefix}_sessions`,
         id: sessionToken,

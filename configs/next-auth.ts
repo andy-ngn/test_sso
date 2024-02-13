@@ -8,7 +8,8 @@ const mode = process.env.NODE_ENV;
 export const authOptions: AuthOptions = {
   // adapter: PrismaAdapter(prisma),
   adapter: ElasticSearchAdapter(esClient, "test_sso"),
-  debug: mode === "development",
+  debug: false,
+  // debug: mode === "development",
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -38,6 +39,9 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: "database",
   },
+  pages: {
+    newUser: "/newUser",
+  },
   // callbacks: {
   //   async signIn({ user, account, profile, credentials, email }) {
   //     console.log({ user, account, profile, credentials, email });
@@ -51,5 +55,25 @@ export const authOptions: AuthOptions = {
   //     return session;
   //   },
   // },
-  events: {},
+
+  events: {
+    createUser: async (message) => {
+      console.log("createUser", message);
+    },
+    updateUser: async (message) => {
+      console.log("updateUser", message);
+    },
+    linkAccount: async (message) => {
+      console.log("linkAccount", message);
+    },
+    session: async (message) => {
+      console.log("session", message);
+    },
+    signIn: async (message) => {
+      console.log("signIn", message);
+    },
+    signOut: async (message) => {
+      console.log("signOut", message);
+    },
+  },
 };

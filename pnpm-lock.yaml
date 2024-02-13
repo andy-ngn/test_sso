@@ -37,7 +37,7 @@ dependencies:
     version: 5.15.9(@mui/material@5.15.9)(@types/react@18.0.0)(react@18.0.0)
   '@mui/lab':
     specifier: ^5.0.0-alpha.70
-    version: 5.0.0-alpha.70(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.9)(@types/react@18.0.0)(react-dom@18.0.0)(react@18.0.0)
+    version: 5.0.0-alpha.70(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.9)(@types/react@18.0.0)(date-fns@3.3.1)(react-dom@18.0.0)(react@18.0.0)
   '@mui/material':
     specifier: ^5.15.9
     version: 5.15.9(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.0.0)(react-dom@18.0.0)(react@18.0.0)
@@ -71,6 +71,9 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  date-fns:
+    specifier: ^3.3.1
+    version: 3.3.1
   deck.gl:
     specifier: ^8.9.34
     version: 8.9.34(@loaders.gl/core@3.4.14)(@loaders.gl/gltf@3.4.14)(@loaders.gl/images@3.4.14)(@luma.gl/constants@8.5.21)(@luma.gl/core@8.5.21)(@luma.gl/engine@8.5.21)(@luma.gl/gltools@8.5.21)(@luma.gl/shadertools@8.5.21)(@luma.gl/webgl@8.5.21)(@math.gl/core@3.6.3)(@math.gl/web-mercator@3.6.3)(@types/react@18.0.0)(gl-matrix@3.4.3)(react-dom@18.0.0)(react@18.0.0)
@@ -236,7 +239,7 @@ packages:
     resolution: {integrity: sha512-+EQE8xZhRM/hsY0CDTVyayMDDY5ihc4MqXCrPxooKw19yAzUIC6uUqsZeaOFNL9YKTNxYKrJP5DFgE8o5xRCOw==}
     dev: false
 
-  /@date-io/date-fns@2.17.0:
+  /@date-io/date-fns@2.17.0(date-fns@3.3.1):
     resolution: {integrity: sha512-L0hWZ/mTpy3Gx/xXJ5tq5CzHo0L7ry6KEO9/w/JWiFWFLZgiNVo3ex92gOl3zmzjHqY/3Ev+5sehAr8UnGLEng==}
     peerDependencies:
       date-fns: ^2.0.0
@@ -245,6 +248,7 @@ packages:
         optional: true
     dependencies:
       '@date-io/core': 2.17.0
+      date-fns: 3.3.1
     dev: false
 
   /@date-io/dayjs@2.17.0:
@@ -1235,7 +1239,7 @@ packages:
       react: 18.0.0
     dev: false
 
-  /@mui/lab@5.0.0-alpha.70(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.9)(@types/react@18.0.0)(react-dom@18.0.0)(react@18.0.0):
+  /@mui/lab@5.0.0-alpha.70(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@mui/material@5.15.9)(@types/react@18.0.0)(date-fns@3.3.1)(react-dom@18.0.0)(react@18.0.0):
     resolution: {integrity: sha512-F4OIfPy9yl3RwEqHAHRkyzgmC9ud0HSualGzX59qNq7HqjVb34lJWC8I9P/cdh3d59eLl6M62FDrO3M5h4DhKg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -1260,7 +1264,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.9
-      '@date-io/date-fns': 2.17.0
+      '@date-io/date-fns': 2.17.0(date-fns@3.3.1)
       '@date-io/dayjs': 2.17.0
       '@date-io/luxon': 2.17.0
       '@date-io/moment': 2.17.0
@@ -1270,6 +1274,7 @@ packages:
       '@mui/utils': 5.15.9(@types/react@18.0.0)(react@18.0.0)
       '@types/react': 18.0.0
       clsx: 1.2.1
+      date-fns: 3.3.1
       prop-types: 15.8.1
       react: 18.0.0
       react-dom: 18.0.0(react@18.0.0)
@@ -2458,6 +2463,10 @@ packages:
   /damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: true
+
+  /date-fns@3.3.1:
+    resolution: {integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==}
+    dev: false
 
   /debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}

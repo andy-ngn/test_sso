@@ -32,6 +32,7 @@
     "@turf/helpers": "^6.5.0",
     "@turf/line-to-polygon": "^6.5.0",
     "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
     "deck.gl": "^8.9.34",
     "i18next": "^23.8.2",
     "i18next-chained-backend": "^4.6.2",
