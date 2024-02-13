@@ -13,3 +13,5 @@ const esClient: NewClient = new Client({
   },
 });
 export default esClient;
+
+export { NewClient as ESClient };

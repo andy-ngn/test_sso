@@ -1,121 +1,43 @@
 import NextAuth, { type AuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { UpstashRedisAdapter } from "@next-auth/upstash-redis-adapter";
-import { PrismaClient } from "@prisma/client";
+
 import type { NextApiHandler } from "next";
 
-import { getToken } from "next-auth/jwt";
-import { ElasticSearchAdapter } from "@/configs/ElasticSearchAdapter";
-const prisma = new PrismaClient();
-const mode = process.env.NODE_ENV;
-const oAuths = [
-  {
-    provider: "github",
-    type: "oauth",
-    providerAccountId: "121242836",
-    userID: "9919345",
-    access_token: "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",
-  },
-];
-const accounts = [
-  {
-    id: "9919345",
-    name: "J Smith",
-    email: "n.christian345@gmail.com",
-    password: "14121502",
-    image: "https://github.com/shadcn.png",
-    org_id: "office_mesh",
-  },
-];
-export const authOptions: AuthOptions = {
-  // adapter: PrismaAdapter(prisma),
-  adapter: ElasticSearchAdapter(),
-  debug: mode === "development",
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: {
-          label: "email",
-          type: "email",
-          placeholder: "Email@mail.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
-        const user = accounts.find(
-          (user) =>
-            user.email === credentials?.username &&
-            user?.password === credentials.password
-        );
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
-      },
-      type: "credentials",
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
-  ],
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    async signIn({ user, account, profile, credentials, email }) {
-      console.log({ user, account, profile, credentials, email });
-      return true;
-    },
-    async redirect({ baseUrl, url }) {
-      return url;
-    },
+import { authOptions } from "@/configs/next-auth";
 
-    async session({ session, token, newSession, trigger, user }) {
-      return session;
-    },
-  },
-  events: {},
-};
+// const handler: NextApiHandler = async (req, res) => {
+//   return await NextAuth(req, res, {
+//     ...authOptions,
+//     callbacks: {
+//       ...authOptions.callbacks,
+//       async jwt({ token, account, user, profile, session, trigger }) {
+//         const jwt = await getToken({ req });
+//         console.log({ jwt, account });
+//         if (jwt) {
+//           return jwt;
+//         }
 
-const handler: NextApiHandler = async (req, res) => {
-  return await NextAuth(req, res, {
-    ...authOptions,
-    callbacks: {
-      ...authOptions.callbacks,
-      async jwt({ token, account, user, profile, session, trigger }) {
-        const jwt = await getToken({ req });
-        console.log({ jwt, account });
-        if (jwt) {
-          return jwt;
-        }
+//         // if (account) {
+//         //   const oauthAccount = oAuths.find(
+//         //     (oauth) => oauth.providerAccountId === account?.providerAccountId
+//         //   );
 
-        // if (account) {
-        //   const oauthAccount = oAuths.find(
-        //     (oauth) => oauth.providerAccountId === account?.providerAccountId
-        //   );
+//         //   if (oauthAccount) {
+//         //     const thisUser = accounts.find(
+//         //       (us) => us.id === oauthAccount.userID
+//         //     );
 
-        //   if (oauthAccount) {
-        //     const thisUser = accounts.find(
-        //       (us) => us.id === oauthAccount.userID
-        //     );
-
-        //     if (thisUser) {
-        //       const { password, ...rest } = thisUser;
-        //       token = { ...token, ...rest };
-        //     }
-        //   }
-        // }
-        return token;
-      },
-    },
-  });
-};
-export default handler;
+//         //     if (thisUser) {
+//         //       const { password, ...rest } = thisUser;
+//         //       token = { ...token, ...rest };
+//         //     }
+//         //   }
+//         // }
+//         return token;
+//       },
+//     },
+//   });
+// };
+export default NextAuth(authOptions);
 
 const payload = {
   token: {
