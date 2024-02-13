@@ -31,6 +31,8 @@
     "@turf/convex": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@turf/line-to-polygon": "^6.5.0",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "deck.gl": "^8.9.34",
@@ -58,6 +60,7 @@
     "typed": "link:@deck.gl/mapbox/typed"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18",

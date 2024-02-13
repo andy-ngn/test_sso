@@ -1,7 +1,9 @@
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 const TestMap = dynamic(() => import("@/components/TestMap"), { ssr: false });
 const Page = () => {
+  const { data: session } = useSession({ required: true });
   useEffect(() => {
     console.log("fetching");
     fetch("https://overpass-api.de/api/interpreter", {
@@ -63,6 +65,7 @@ const Page = () => {
   //                 out geom;
   //             `),
   // })
+  if (!session?.user) return null;
   return (
     <div>
       <TestMap />
